@@ -74,6 +74,13 @@ app.post('/experiences', (req, res) => {
   };
 
   experiences.push(newExperience);
+  experiences.save()
+  .then(() => {
+    res.send({ message: 'Event created successfully' });
+  })
+  .catch((err) => {
+    res.status(500).send({ error: err });
+  });
 
   res.status(201).json({ id: newExperience.id });
 });
@@ -106,7 +113,7 @@ app.post('/experiences/:id/media', (req, res) => {
     }
 
     experience.media.push(...media);
-
+media.save();
     res.status(201).json({ success: true });
   });
 });
