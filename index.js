@@ -7,7 +7,7 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
-const app = express();
+
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/care-alliance";
 const PORT = process.env.PORT || 3000;
