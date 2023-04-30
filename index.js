@@ -58,44 +58,68 @@ const experienceSchema = new mongoose.Schema({
 
 // Define experience model
 const Experience = mongoose.model('Experience', experienceSchema);
+const experiences = [];
 
-// Submit a new experience
-app.post('/experiences', async (req, res) => {
-  try {
-    const { name, location, category, timePeriod, experience, media } = req.body;
-    const newExperience = new Experience({
-      name,
-      location,
-      category,
-      timePeriod,
-      experience,
-      media
-    });
-    const result = await newExperience.save();
-    res.status(201).json(result);
-  } catch (error) {
-    console.error('Error submitting experience:', error);
-    res.status(500).json({ message: 'Error submitting experience' });
-  }
+// Route for submitting a new experience
+app.post('/experiences', (req, res) => {
+  const { location, category, timePeriod, experience } = req.body;
+
+  const newExperience = {
+    id: experiences.length + 1,
+    location,
+    category,
+    timePeriod,
+    experience,
+    media: []
+  };
+
+  experiences.push(newExperience);
+
+  res.status(201).json({ id: newExperience.id });
 });
 
-// Get all experiences
-app.get('/experiences', async (req, res) => {
-  try {
-    const experiences = await Experience.find();
-    res.json(experiences);
-  } catch (error) {
-    console.error('Error getting experiences:', error);
-    res.status(500).json({ message: 'Error getting experiences' });
+// Route for uploading media files for an experience
+app.post('/experiences/:id/media', (req, res) => {
+  const id = parseInt(req.params.id);
+  const experience = experiences.find(e => e.id === id);
+
+  if (!experience) {
+    return res.status(404).json({ error: 'Experience not found' });
   }
-});
 
+  const form = formidable({ multiples: true });
 
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error parsing form data' });
+    }
+
+    const media = [];
+
+    for (const file of Object.values(files)) {
+      media.push({
+        filename: file.name,
+        type: file.type,
+        path: file.path
+      });
+    }
+
+    experience.media.push(...media);
+
+    res.status(201).json({ success: true });
   });
-  
-  app.get("/", (req,res) =>{
+});
+
+// Route for getting all experiences
+app.get('/experiences', (req, res) => {
+  res.json(experiences);
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});  app.get("/", (req,res) =>{
       res.send("hello");
   })
   
