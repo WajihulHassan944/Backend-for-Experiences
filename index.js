@@ -65,6 +65,21 @@ app.post('/experiences', async (req, res) => {
   }
 });
 
+app.get('/experiences', async (req, res) => {
+    try {
+      const experiences = await Experience.find();
+      res.json(experiences);
+    } catch (error) {
+      alert(error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to fetch experiences.',
+        error: error,
+      });
+    }
+  });
+
+
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });
