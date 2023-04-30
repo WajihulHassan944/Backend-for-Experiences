@@ -19,9 +19,9 @@ mongoose.connect(MONGODB_URI, {
 });
 
 const experienceSchema = new mongoose.Schema({
+  name:String,
   title: String,
   content: String,
-  fileUrl: String,
   location: String,
   category: String,
   createdAt: {
@@ -40,7 +40,8 @@ app.use(bodyParser.json());
 app.post('/experiences', async (req, res) => {
   try {
     const experience = new Experience({
-      title: req.body.title,
+        name: req.body.name,
+        title: req.body.title,
       content: req.body.content,
       fileUrl: req.body.fileUrl,
       location: req.body.location,
