@@ -43,7 +43,6 @@ app.post('/experiences', async (req, res) => {
         name: req.body.name,
         title: req.body.title,
       content: req.body.content,
-      fileUrl: req.body.fileUrl,
       location: req.body.location,
       category: req.body.category,
     });
@@ -78,6 +77,28 @@ app.get('/experiences', async (req, res) => {
       });
     }
   });
+
+  
+app.get('/experiences/:key', async (req, res) => {
+  try {
+    const searchQuery = req.params.key;
+    const searchRegex = new RegExp(searchQuery, 'i');
+    const results = await Experience.find({
+      $or: [
+        { name: searchRegex },
+        { title: searchRegex },
+        { content: searchRegex },
+        { location: searchRegex },
+        { category: searchRegex }
+      ]
+    }).exec();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 app.listen(PORT, () => {
