@@ -99,7 +99,40 @@ app.get('/experiences/:key', async (req, res) => {
   }
 });
 
+// Update an experience
+app.put('/experiences/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, title, content, location, category } = req.body;
 
+  try {
+    const updatedExperience = await Experience.findByIdAndUpdate(id, {
+      name: name,
+      title: title,
+      content: content,
+      location: location,
+      category: category
+    }, { new: true });
+
+    res.json(updatedExperience);
+  } catch (error) {
+    console.error('Error updating experience', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete an experience
+app.delete('/experiences/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Experience.findByIdAndDelete(id);
+
+    res.json({ message: 'Experience deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting experience', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
