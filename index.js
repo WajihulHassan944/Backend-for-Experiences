@@ -45,34 +45,48 @@ const userSchema = new mongoose.Schema({
 const User = new mongoose.model("User", userSchema)
 
 //Routes
-app.post("/login", (req, res)=> {
-  const { email, password} = req.body;
-  User.findOne({ email: email}, (err, user) => {
-      if(user){
-          if(password === user.password ) {
-              res.send({message: "Login Successfull", user: user})
-          } else {
-              res.send({ message: "Password didn't match"})
-          }
-      } else {
-          res.send({message: "User not registered"})
-      }
-  })
-}) 
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-app.post("/register", (req, res)=> {
-  const { name, email, password} = req.body;
-  
-          const user = new User({
-              name,
-              email,
-              password
-          })
-          user.save();
-      
-  })
-  
-  
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+      if (password === user.password) {
+        res.status(200).json({ message: 'Login successful', user: user });
+      } else {
+        res.status(401).json({ message: 'Invalid password' });
+      }
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+app.post('/register', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email: email });
+
+    if (existingUser) {
+      res.status(409).json({ message: 'User already exists' });
+    } else {
+      const newUser = new User({
+        name: name,
+        email: email,
+        password: password,
+      });
+
+      await newUser.save();
+      res.status(200).json({ message: 'Registration successful' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});  
+
 // POST /experiences route handler
 app.post('/experiences', async (req, res) => {
   try {
