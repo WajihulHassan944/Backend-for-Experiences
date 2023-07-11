@@ -62,21 +62,17 @@ app.post("/login", (req, res)=> {
 
 app.post("/register", (req, res)=> {
   const { name, email, password} = req.body;
-  User.findOne({email: email}, (err, user) => {
-      if(user){
-          res.send({message: "User already registerd"})
-      } else {
+  
           const user = new User({
               name,
               email,
               password
           })
           user.save();
-      }
+      
   })
   
-}) 
-
+  
 // POST /experiences route handler
 app.post('/experiences', async (req, res) => {
   try {
