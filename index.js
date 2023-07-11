@@ -46,7 +46,7 @@ const User = new mongoose.model("User", userSchema)
 
 //Routes
 app.post("/login", (req, res)=> {
-  const { email, password} = req.body
+  const { email, password} = req.body;
   User.findOne({ email: email}, (err, user) => {
       if(user){
           if(password === user.password ) {
@@ -61,7 +61,7 @@ app.post("/login", (req, res)=> {
 }) 
 
 app.post("/register", (req, res)=> {
-  const { name, email, password} = req.body
+  const { name, email, password} = req.body;
   User.findOne({email: email}, (err, user) => {
       if(user){
           res.send({message: "User already registerd"})
