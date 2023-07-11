@@ -71,13 +71,7 @@ app.post("/register", (req, res)=> {
               email,
               password
           })
-          user.save(err => {
-              if(err) {
-                  res.send(err)
-              } else {
-                  res.send( { message: "Successfully Registered, Please login now." })
-              }
-          })
+          user.save();
       }
   })
   
