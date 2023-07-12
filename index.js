@@ -37,13 +37,15 @@ const Experience = mongoose.model('Experience', experienceSchema);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const bcrypt = require('bcrypt');
+
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String
-})
+});
 
-const User = new mongoose.model("User", userSchema)
+const User = new mongoose.model("User", userSchema);
 
 //Routes
 app.post('/login', async (req, res) => {
@@ -53,10 +55,10 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-      if (password === user.password) {
-        // Generate the objectId string from the ObjectId
-        const objectId = user._id.toString();
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
+      if (passwordMatch) {
+        const objectId = user._id.toString();
         res.status(200).json({ message: 'Login successful', objectId: objectId });
       } else {
         res.status(401).json({ message: 'Invalid password' });
@@ -68,6 +70,7 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 app.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -77,10 +80,12 @@ app.post('/register', async (req, res) => {
     if (existingUser) {
       res.status(409).json({ message: 'User already exists' });
     } else {
+      const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
       const newUser = new User({
         name: name,
         email: email,
-        password: password,
+        password: hashedPassword, // Store the hashed password in the database
       });
 
       await newUser.save();
@@ -89,17 +94,16 @@ app.post('/register', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
   }
-});  
+});
+
 app.get('/users/:objectId', async (req, res) => {
   const { objectId } = req.params;
 
   try {
     const user = await User.findById(objectId);
     if (user) {
-      // User found, send the user data in the response
       res.status(200).json(user);
     } else {
-      // User not found
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
