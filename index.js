@@ -45,6 +45,23 @@ const userSchema = new mongoose.Schema({
 const User = new mongoose.model("User", userSchema)
 
 //Routes
+app.get('/users/:objectId', async (req, res) => {
+  const { objectId } = req.params;
+
+  try {
+    const user = await User.findById(objectId);
+    if (user) {
+      // User found, send the user data in the response
+      res.status(200).json(user);
+    } else {
+      // User not found
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
