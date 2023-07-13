@@ -228,7 +228,7 @@ app.post("/submit-order", (req, res) => {
 
   // Set up the email message
   const mailOptions = {
-    from: "wajih786hassan@gmail.com", // Sender's email address
+    from: "vascularbundle43@gmail.com", // Sender's email address
     to: "vascularbundle43@gmail.com", // Receiver's email address
     subject: "New cake Order",
     text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}`
