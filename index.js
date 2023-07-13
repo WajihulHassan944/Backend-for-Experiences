@@ -12,7 +12,7 @@ app.use(express.json());
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/care-alliance";
 const PORT = process.env.PORT || 3000;
-
+const MYPASSWORD = process.env.MYPASSWORD;
 // MongoDB connection
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -208,6 +208,46 @@ app.delete('/experiences/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.post("/submit-order", (req, res) => {
+  // Extract the form data from the request body
+  const { itemName, userName, userAddress , userEmail} = req.body;
+
+  // Send an email with the form details using Nodemailer or your preferred email library
+  // Here's an example using Nodemailer
+  const nodemailer = require("nodemailer");
+
+  // Create a transporter object for sending the email
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "vascularbundle43@gmail.com", // Replace with your Gmail email address
+      pass:  MYPASSWORD // Replace with your Gmail password
+    }
+  });
+
+  // Set up the email message
+  const mailOptions = {
+    from: userEmail, // Sender's email address
+    to: "vascularbundle43@gmail.com", // Receiver's email address
+    subject: "New cake Order",
+    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}`
+  };
+
+  // Send the email
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      console.error(error);
+      res.status(500).send("Error sending email");
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(200).send("Order submitted successfully");
+    }
+  });
+});
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
