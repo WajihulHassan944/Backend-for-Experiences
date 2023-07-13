@@ -219,13 +219,15 @@ app.post("/submit-order", (req, res) => {
 
   // Create a transporter object for sending the email
   const transporter = nodemailer.createTransport({
-    service: "Gmail",
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
-      user: "vascularbundle43@gmail.com", // Replace with your Gmail email address
-      pass:  "Rizkhanum@2002" // Replace with your Gmail password
-    }
-  });
-
+     user: 'vascularbundle43@gmail.com',
+     pass: 'ljethygculcuttxx',
+    },
+   });
   // Set up the email message
   const mailOptions = {
     from: "vascularbundle43@gmail.com", // Sender's email address
