@@ -233,7 +233,7 @@ app.post("/submit-order", (req, res) => {
     from: "vascularbundle43@gmail.com", // Sender's email address
     to: "vascularbundle43@gmail.com", // Receiver's email address
     subject: "New cake Order",
-    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}`
+    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`
   };
 
   // Send the email
