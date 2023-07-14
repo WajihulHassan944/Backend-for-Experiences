@@ -230,12 +230,11 @@ app.post("/submit-order", (req, res) => {
    });
   // Set up the email message
   const mailOptions = {
-    from: "vascularbundle43@gmail.com", // Sender's email address
+    from: userEmail, // Set the from field to the userEmail value
     to: "vascularbundle43@gmail.com", // Receiver's email address
     subject: "New cake Order",
     text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`
   };
-
   // Send the email
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
