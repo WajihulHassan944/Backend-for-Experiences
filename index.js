@@ -217,36 +217,56 @@ app.post("/submit-order", (req, res) => {
   // Here's an example using Nodemailer
   const nodemailer = require("nodemailer");
 
-  // Create a transporter object for sending the email
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-     user: 'vascularbundle43@gmail.com',
-     pass: 'ljethygculcuttxx',
-    },
-   });
-  // Set up the email message
-  const mailOptions = {
-    from: userEmail, // Set the from field to the userEmail value
-    to: "vascularbundle43@gmail.com", // Receiver's email address
-    subject: "New cake Order",
-    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`
-  };
-  // Send the email
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Error sending email");
-    } else {
-      console.log("Email sent: " + info.response);
-      res.status(200).send("Order submitted successfully");
-    }
-  });
+// Create a transporter object for sending the email
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'vascularbundle43@gmail.com',
+    pass: 'ljethygculcuttxx',
+  },
 });
 
+// Set up the email message to the store
+const storeMailOptions = {
+  from: userEmail,
+  to: "vascularbundle43@gmail.com",
+  subject: "New sweet cake Order",
+  text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`,
+};
+
+// Set up the email message to the user
+const userMailOptions = {
+  from: "vascularbundle43@gmail.com",
+  to: userEmail,
+  subject: "Thank you for placing the order",
+  text: "Thank you for placing your order. We will process it soon.",
+};
+
+// Send the email to the store
+transporter.sendMail(storeMailOptions, function(error, storeInfo) {
+  if (error) {
+    console.error(error);
+    res.status(500).send("Error sending email to store");
+  } else {
+    console.log("Email sent to store: " + storeInfo.response);
+
+    // Send the email to the user
+    transporter.sendMail(userMailOptions, function(error, userInfo) {
+      if (error) {
+        console.error(error);
+        res.status(500).send("Error sending email to user");
+      } else {
+        console.log("Email sent to user: " + userInfo.response);
+        res.status(200).send("Order submitted successfully");
+      }
+    });
+  }
+});
+
+});
 
 
 
@@ -256,4 +276,4 @@ app.listen(PORT, () => {
   
   app.get("/", (req,res) =>{
       res.send("hello");
-  })
+  });
