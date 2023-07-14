@@ -211,7 +211,7 @@ app.delete('/experiences/:id', async (req, res) => {
 
 app.post("/submit-order", (req, res) => {
   // Extract the form data from the request body
-  const { itemName, userName, userAddress , userEmail} = req.body;
+  const { itemName, userName, userAddress , userEmail , phone} = req.body;
 
   // Send an email with the form details using Nodemailer or your preferred email library
   // Here's an example using Nodemailer
@@ -233,7 +233,7 @@ app.post("/submit-order", (req, res) => {
     from: "vascularbundle43@gmail.com", // Sender's email address
     to: "vascularbundle43@gmail.com", // Receiver's email address
     subject: "New cake Order",
-    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}`
+    text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}`
   };
 
   // Send the email
