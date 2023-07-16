@@ -242,7 +242,7 @@ const userMailOptions = {
   from: "vascularbundle43@gmail.com",
   to: userEmail,
   subject: "Thank you for placing the order",
-  text: "Thank you for placing your order. We will process it soon.",
+  text: `Thank you ${userName} for placing order. We will process it soon.\n\nOrder details:\nOrdered item: ${itemName}\nYour Address: ${userAddress}\nPhone Number: ${phone}`,
 };
 
 // Send the email to the store
@@ -275,5 +275,5 @@ app.listen(PORT, () => {
   });
   
   app.get("/", (req,res) =>{
-      res.send("hello");
+      res.send("Backend server has started running successfully...");
   });
