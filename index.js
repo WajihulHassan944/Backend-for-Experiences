@@ -224,22 +224,22 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: 'vascularbundle43@gmail.com',
-    pass: 'ljethygculcuttxx',
+    user: 'wajih786hassan@gmail.com',
+    pass: 'vceidkrflqtkhavz',
   },
 });
 
 // Set up the email message to the store
 const storeMailOptions = {
   from: userEmail,
-  to: "vascularbundle43@gmail.com",
+  to: "wajih786hassan@gmail.com",
   subject: "New sweet cake Order",
   text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`,
 };
 
 // Set up the email message to the user
 const userMailOptions = {
-  from: "vascularbundle43@gmail.com",
+  from: "wajih786hassan@gmail.com",
   to: userEmail,
   subject: "Thank you for placing the order",
   text: `Thank you ${userName} for placing order. We will process it soon.\n\nOrder details:\nOrdered item: ${itemName}\nYour Address: ${userAddress}\nPhone Number: ${phone}`,
