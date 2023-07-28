@@ -44,8 +44,72 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String
 });
-
 const User = new mongoose.model("User", userSchema);
+
+
+const cakeSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  title: String,
+  date: Date,
+  description: String,
+});
+const Cake = mongoose.model("Cake", cakeSchema);
+app.post('/users/:objectId/cakes', async (req, res) => {
+  const { objectId } = req.params;
+  const { title, date, description } = req.body;
+
+  try {
+    const user = await User.findById(objectId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const cake = new Cake({
+      userId: objectId,
+      title,
+      date,
+      description,
+    });
+
+    await cake.save();
+    res.status(200).json({ message: 'Data submitted successfully', cake });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+// ... (same code as before)
+
+app.get('/users/:objectId/cakes', async (req, res) => {
+  const { objectId } = req.params;
+
+  try {
+    const user = await User.findById(objectId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const cakes = await Cake.find({ userId: objectId });
+    res.status(200).json(cakes);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.delete('/cakes/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const cake = await Cake.findById(id);
+    if (!cake) {
+      return res.status(404).json({ message: 'Data not found' });
+    }
+
+    await cake.remove();
+    res.status(200).json({ message: 'Data deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 //Routes
 app.post('/login', async (req, res) => {
