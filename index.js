@@ -99,12 +99,8 @@ app.delete('/cakes/:id', async (req, res) => {
   const { id } = req.params;
   console.log('Received DELETE request for cake ID:', id);
   try {
-    const cake = await Cake.findById(id);
-    if (!cake) {
-      return res.status(404).json({ message: 'Data not found' });
-    }
-
-    await cake.remove();
+    const cake = await Cake.findByIdAndDelete(id);
+    
     res.status(200).json({ message: 'Data deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
