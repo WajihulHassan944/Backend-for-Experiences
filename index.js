@@ -97,7 +97,7 @@ app.get('/users/:objectId/cakes', async (req, res) => {
 
 app.delete('/cakes/:id', async (req, res) => {
   const { id } = req.params;
-
+  console.log('Received DELETE request for cake ID:', id);
   try {
     const cake = await Cake.findById(id);
     if (!cake) {
