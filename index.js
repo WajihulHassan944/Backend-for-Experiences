@@ -271,7 +271,7 @@ app.delete('/experiences/:id', async (req, res) => {
 
 app.post("/submit-order", (req, res) => {
   // Extract the form data from the request body
-  const { itemName, userName, userAddress , userEmail , phone} = req.body;
+  const { itemName, userName, userAddress , userEmail , phone , shipping , tshirtType , quantity , tshirtSize} = req.body;
 
   // Send an email with the form details using Nodemailer or your preferred email library
   // Here's an example using Nodemailer
@@ -289,20 +289,44 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Set up the email message to the store
 const storeMailOptions = {
   from: userEmail,
   to: "vascularbundle43@gmail.com",
   subject: "New T-shirt Order",
-  text: `Item: ${itemName}\nUser Name: ${userName}\nUser Address: ${userAddress}\nUser Phone Number: ${phone}\nUser Email: ${userEmail}`,
+  html: `
+    <h2 style="color: #ff523b;">New T-shirt Order</h2>
+    <hr style="border: 1px solid #ccc;">
+    <p><strong>Item:</strong> ${itemName}</p>
+    <p><strong>User Name:</strong> ${userName}</p>
+    <p><strong>User Address:</strong> ${userAddress}</p>
+    <p><strong>User Phone Number:</strong> ${phone}</p>
+    <p><strong>User Email:</strong> ${userEmail}</p>
+    <p><strong>Shipping:</strong> ${shipping}</p>
+    <p><strong>T-shirt Type:</strong> ${tshirtType}</p>
+    <p><strong>T-shirt Size:</strong> ${tshirtSize}</p>
+    <p><strong>Quantity:</strong> ${quantity}</p>
+  `,
 };
 
-// Set up the email message to the user
 const userMailOptions = {
   from: "wajih786hassan@gmail.com",
   to: userEmail,
   subject: "Thank you for placing the order",
-  text: `Thank you ${userName} for placing order. We will process it soon.\n\nOrder details:\nOrdered item: ${itemName}\nYour Address: ${userAddress}\nPhone Number: ${phone}`,
+  html: `
+    <h2 style="color: #00a86b;">Thank you for placing the order</h2>
+    <p>Hello ${userName},</p>
+    <p>We appreciate your order and will begin processing it soon.</p>
+    <h3>Your Order Details:</h3>
+    <p><strong>Ordered Item:</strong> ${itemName}</p>
+    <p><strong>Your Address:</strong> ${userAddress}</p>
+    <p><strong>Phone Number:</strong> ${phone}</p>
+    <p><strong>Shipping:</strong> ${shipping}</p>
+    <p><strong>T-shirt Type:</strong> ${tshirtType}</p>
+    <p><strong>T-shirt Size:</strong> ${tshirtSize}</p>
+    <p><strong>Quantity:</strong> ${quantity}</p>
+    <p>If you have any questions or concerns, feel free to contact us.</p>
+    <p>Thank you again for choosing our store!</p>
+  `,
 };
 
 // Send the email to the store
