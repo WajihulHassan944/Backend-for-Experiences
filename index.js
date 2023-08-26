@@ -271,7 +271,7 @@ app.delete('/experiences/:id', async (req, res) => {
 
 app.post("/submit-order", (req, res) => {
   // Extract the form data from the request body
-  const { itemName, userName, userAddress , userEmail , phone , shipping , tshirtType , quantity , tshirtSize} = req.body;
+  const { itemName, userName, userAddress , userEmail , phone , shipping , tshirtType , quantity , tshirtSize , imageUrl} = req.body;
 
   // Send an email with the form details using Nodemailer or your preferred email library
   // Here's an example using Nodemailer
@@ -296,6 +296,7 @@ const storeMailOptions = {
   html: `
     <h2 style="color: #ff523b;">New T-shirt Order</h2>
     <hr style="border: 1px solid #ccc;">
+    <img src="${imageUrl}" alt="Product Image" style="max-width: 250px; padding:10px; background-color:#f5f1ee;margin:15px 0;">
     <p><strong>Item:</strong> ${itemName}</p>
     <p><strong>User Name:</strong> ${userName}</p>
     <p><strong>User Address:</strong> ${userAddress}</p>
@@ -317,6 +318,7 @@ const userMailOptions = {
     <p>Hello ${userName},</p>
     <p>We appreciate your order and will begin processing it soon.</p>
     <h3>Your Order Details:</h3>
+    <img src="${imageUrl}" alt="Product Image" style="max-width: 250px; padding:10px; background-color:#f5f1ee;margin:15px 0;">
     <p><strong>Ordered Item:</strong> ${itemName}</p>
     <p><strong>Your Address:</strong> ${userAddress}</p>
     <p><strong>Phone Number:</strong> ${phone}</p>
