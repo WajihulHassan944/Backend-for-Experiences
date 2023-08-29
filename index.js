@@ -355,9 +355,6 @@ transporter.sendMail(storeMailOptions, function(error, storeInfo) {
 });
 
 
-app.get("/test", (req,res) =>{
-  res.send("Backend server has tested successfully...");
-});
 
 
 
