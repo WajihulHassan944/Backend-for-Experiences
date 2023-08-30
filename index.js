@@ -3,11 +3,43 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const { ObjectId } = require('mongodb');
-
+const http = require('http');
+const socketIO = require('socket.io');
+const server = http.createServer(app);
+const io = socketIO(server);
 
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
+
+
+const players = [];
+
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('ready', () => {
+    players.push(socket.id);
+
+    if (players.length === 2) {
+      io.emit('start');
+    }
+  });
+
+  socket.on('update', (data) => {
+    // Handle game updates and broadcast to other players
+    socket.broadcast.emit('update', data);
+  });
+
+  socket.on('disconnect', () => {
+    const index = players.indexOf(socket.id);
+    if (index !== -1) {
+      players.splice(index, 1);
+      io.emit('playerLeft', socket.id);
+    }
+    console.log('A user disconnected:', socket.id);
+  });
+});
 
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/care-alliance";
